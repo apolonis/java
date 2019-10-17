@@ -1,0 +1,110 @@
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Main {
+  public static void main(String[] args) {
+   ArrayList<HashMap<String, Integer>> myList = new ArrayList<HashMap<String, Integer>>();
+   HashMap<String, Integer> check = new HashMap<String, Integer>();
+
+   for (int i = 0; i < 5; i++) {
+     //String s = Integer.toString(i);
+     //check.put(Integer.toString(i),i);
+     //check.put(String.valueOf(new Integer(i)),i);
+     //check.put("user" + i ,i);
+     check.put("i",i);
+     System.out.println(check);
+     //System.out.println(Arrays.toString(result));     
+     myList.add(check);
+   }
+   System.out.println(myList);
+   //System.out.println(Arrays.toString(myList));
+   //for(i HashMap: myList){
+     //System.out.println(i);
+   //}
+   //System.out.println(myList.get(1)+"\n"+(myList.get(1)).get(1));
+  }
+}
+
+#############################################################################
+
+Iterating over list of dict
+
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.Iterator;
+
+public class Main {
+  
+  public static void main(String[] args) {
+     
+   ArrayList<HashMap<String, Integer>> myList = new ArrayList<HashMap<String, Integer>>();
+
+
+        HashMap<String, Integer> data1 = new HashMap<String, Integer>();
+         data1.put("0",new Integer(1));
+         data1.put("1",new Integer(2));
+         data1.put("2",new Integer(3));
+         data1.put("3",new Integer(4));
+
+        HashMap<String, Integer> data2 = new HashMap<String, Integer>();
+        data1.put("10",new Integer(10));
+         data1.put("11",new Integer(20));
+         data1.put("12",new Integer(30));
+         data1.put("13",new Integer(40));
+
+         myList.add(data1);
+         myList.add(data2);
+
+
+        for (int a =0; a<myList.size();a++)
+        {
+            HashMap<String, Integer> tmpData = (HashMap<String, Integer>) myList.get(a);
+            Set<String> key = tmpData.keySet();
+            Iterator it = key.iterator();
+            while (it.hasNext()) {
+                String hmKey = (String)it.next();
+                Integer hmData = (Integer) tmpData.get(hmKey);
+
+                System.out.println("Key: "+hmKey +" & Data: "+hmData);
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+
+        }       
+  }
+}
+--------------------------------------------------------------------------------------
+\\ Another example
+
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
+
+public class Main {
+  
+  public static void main(String[] args) {
+     
+   HashMap<Integer, String> hmap = new HashMap<Integer, String>();
+
+      /*Adding elements to HashMap*/
+      hmap.put(12, "Chaitanya");
+      hmap.put(2, "Rahul");
+      hmap.put(7, "Singh");
+      hmap.put(49, "Ajeet");
+      hmap.put(3, "Anuj");
+
+      /* Display content using Iterator*/
+      Set set = hmap.entrySet();
+      Iterator iterator = set.iterator();
+      while(iterator.hasNext()) {
+         Map.Entry mentry = (Map.Entry)iterator.next();
+         System.out.print("key is: "+ mentry.getKey() + " & Value is: ");
+         System.out.println(mentry.getValue());
+      }         
+  }
+}

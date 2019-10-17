@@ -1,0 +1,5 @@
+
+Xsquid:S18548"<Remove this useless assignment to local variable "optional".(ΎΣετώÿÿÿÿ
+Fsquid:EmptyStatementUsageCheckE"Remove this empty statement.(―υ 
+\squid:S4684]"@Replace this persistent entity with a simple POJO or DTO object.(‹Ε«ωÿÿÿÿ
+Isquid:S14818"-Remove this unused "optional" local variable.(ΎΣετώÿÿÿÿ

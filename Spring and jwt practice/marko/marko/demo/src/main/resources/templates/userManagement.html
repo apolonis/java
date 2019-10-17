@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:text-align="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{'/'}">UserManagement</a>
+        </div>
+
+        <a id="logoutButton" style="background-color: blue" type="button" class="btn btn-info" th:href="@{'/'}">Logout</a>
+    </div>
+</nav>
+<h3 align="center" th:text="${title}"></h3>
+<div class="container mb-4" align="right">
+    <button type="button" class="btn btn-primary" onclick="populateAdd();">Add User</button>
+    <button type="button" class="btn btn-primary" onclick="window.location.href='/api/usersPDF'">Export to PDF</button>
+</div>
+<div class="container mb-3">
+<table id="tableuser" class="table table-dark">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Family name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Password</th>
+        <th scope="col">Roles</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.name}">Name</td>
+        <td th:text="${user.familyName}">Family name</td>
+        <td th:text="${user.username}">Username</td>
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.password}">Pass</td>
+        <td th:text="${user.role}">Roles</td>
+        <td>
+            <button type="button" class="btn btn-primary" th:data-id="${user.id}" th:data-name="${user.name}"
+                    th:data-familyName="${user.familyName}" th:data-username="${user.username}"
+                    th:data-mail="${user.email}" th:data-pass="${user.password}" th:data-pos="${user.position}"
+                    th:data-phonenumber="${user.phoneNumber}" th:data-linkfb="${user.fb}"
+                    th:data-linkl="${user.linkedin}" th:data-role="${user.role}"
+                    onclick="populateModal(this.getAttribute('data-id'),
+                    this.getAttribute('data-name'),this.getAttribute('data-familyName'),
+                    this.getAttribute('data-username'),this.getAttribute('data-mail'),
+                    this.getAttribute('data-pass'),this.getAttribute('data-pos'),
+                    this.getAttribute('data-phonenumber'),this.getAttribute('data-linkfb'),
+                    this.getAttribute('data-linkl'),this.getAttribute('data-role'));">Edit</button>
+           <button type="button" class="btn btn-danger" th:data-delname="${user.name}" th:data-delusername="${user.username}" onclick="populateDelBody(this.getAttribute('data-delname'),this.getAttribute('data-delusername'));">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="addModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modtitle">Enter information of new user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label id="errorLabel" style="color: red;">Some fields is empty or username / email is already taken</label>
+                    </div>
+                        <div class="form-group">
+                            <input type="hidden" id="custId">
+                        </div>
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="inputName" aria-describedby="nameHelp" placeholder="Enter Name">
+                        <small id="nameHelp" class="form-text text-muted">Enter name</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFamilyName">Family Name</label>
+                        <input type="text" class="form-control" id="inputFamilyName" aria-describedby="familyNameHelp" placeholder="Enter Family Name">
+                        <small id="familyNameHelp" class="form-text text-muted">Enter last name</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        <input type="text" class="form-control" id="inputUsername" aria-describedby="usernameHelp" placeholder="Enter Username">
+                        <small id="usernameHelp" class="form-text text-muted">Enter username</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email Address</label>
+                        <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted">Enter valid email address</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                        <small id="passwordHelp" class="form-text text-muted">Enter password</small>
+                    </div>
+                    <div class="form-group">
+                        <Position for="inputPosition">Position</Position>
+                        <div class="input-group">
+                            <span><i class="fa fa-user" style="font-size:36px"></i></span>
+                            <input type="text" class="form-control" id="inputPosition" aria-describedby="PositionHelp" placeholder="Enter Position">
+                        </div>
+                        <small id="PositionHelp" class="form-text text-muted">Your Position goes here.</small>
+                    </div>
+                    <div class="form-group">
+                        <PhoneNumber for="inputPhoneNumber">Phone Number</PhoneNumber>
+                        <div class="input-group">
+                            <span><i class="fa fa-phone-square" style="font-size:36px"></i></span>
+                            <input type="text" class="form-control" id="inputPhoneNumber" aria-describedby="PhoneNumberHelp" placeholder="Enter Phone Number">
+                        </div>
+                        <small id="PhoneNumberHelp" class="form-text text-muted">Your Phone Number goes here.</small>
+                    </div>
+                        <div class="form-group">
+                        <label for="inputFB">Link to FB </label>
+                        <div class="input-group">
+                            <span><i class="fa fa-facebook-square" style="font-size:36px"></i></span>
+                            <input type="text" class="form-control" id="inputFB" aria-describedby="FbHelp" placeholder="Link to fb profile">
+                        </div>
+                        <small id="FbHelp" class="form-text text-muted">Link to fb profile</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLinkedin">Link to Linkedin </label>
+                        <div class="input-group">
+                            <span><i class="fa fa-linkedin-square" style="font-size:36px"></i></span>
+                            <input type="text" class="form-control" id="inputLinkedin" aria-describedby="LinkedinHelp" placeholder="Link to linkedin account">
+                        </div>
+                        <small id="LinkedinHelp" class="form-text text-muted">Link to linkedin account</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Users role</label>
+                        <select name="role" class="custom-select mb-3" id="role">
+                            <option value="" selected></option>
+                            <option value="admin">admin</option>
+                            <option value="editor">editor</option>
+                            <option value="regular">regular</option>
+                        </select>
+                        <small id="roleHelp" class="text-danger"></small>
+                    </div>
+            </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="save" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="delModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete User</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div>
+                    <label id="errDel" style="color:red;">User with this  username not exist.</label>
+                </div>
+                <div>
+                    <h3><p th:text="@{'Are you sure you want to delete user: '}"></p>
+                        <p id="delName" style="color:darkblue;"></p>
+                        <p th:text="@{'with username: '}"></p>
+                        <p id="delUsername" style="color:darkblue;"></p></h3>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="deluser">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+    function populateModal(_id_, _name_,_familyName_, _username_, _mail_, _pass_, _pos_, _phonenumber_, _urlfb_, _urll_, _role_){
+        $('#custId').val(_id_);
+        $('#inputName').val(_name_);
+        $('#inputFamilyName').val(_familyName_);
+        $('#inputUsername').val(_username_);
+        $('#inputEmail').val(_mail_);
+        $('#inputPassword').val(_pass_);
+        $('#inputPosition').val(_pos_);
+        $('#inputPhoneNumber').val(_phonenumber_);
+        $('#inputFB').val(_urlfb_);
+        $('#inputLinkedin').val(_urll_);
+        $('#role').val(_role_);
+
+        $('#modtitle').text("Edit User");
+        $('#save').text("Edit");
+        $('#addModal').modal('show');
+    }
+    function populateAdd(){
+        $("#custId").val("");
+        $('#inputName').val("");
+        $('#inputFamilyName').val("");
+        $('#inputUsername').val("");
+        $('#inputEmail').val("");
+        $('#inputPassword').val("");
+        $('#inputPosition').val("");
+        $('#inputPhoneNumber').val("");
+        $('#inputFB').val("");
+        $('#inputLinkedin').val("");
+        $("#role").value = "";
+        $('#modtitle').text("Save User");
+        $('#save').text("Save");
+        $('#addModal').modal('show');
+    }
+
+    function hasDigitFind(_str_) {
+        this._code_ = 10;
+        var _strArray = [];
+
+        if (_str_ !== '' || _str_ !== undefined || _str_ !== null) {
+            _strArray = _str_.split('');
+            for(var i = 0; i < _strArray.length; i++) {
+                if(!isNaN(parseInt(_strArray[i]))) {
+                    this._code_ = -1;
+                    break;
+                } else {
+                    this._code_ = 1;
+                }
+            }
+
+        }
+        return this._code_;
+    }
+
+    function validateForm() {
+
+
+        if ($('#inputName').val().trim() === '' || $('#inputFamilyName').val().trim() === '' || $('#inputUsername').val().trim() === '' || $('#inputEmail').val().trim() === '' || $('#inputPassword').val().trim() === '' || hasDigitFind($('#inputName').val().trim())==-1 || hasDigitFind($('#inputFamilyName').val().trim())==-1) {
+
+            if ($('#inputName').val().trim() === '' || hasDigitFind($('#inputName').val().trim())==-1) {
+                $("#nameHelp").text("Your name can't be empty field and can't have a number.");
+            } else {
+                $("#nameHelp").text("Your name goes here.");
+            }
+
+            if ($('#inputFamilyName').val().trim() === '' || hasDigitFind($('#inputFamilyName').val().trim())==-1 ) {
+                $("#familyNameHelp").text("Your family name can't be empty field and can't have a number.");
+            } else {
+                $("#familyNameHelp").text("Your  family name goes here.");
+            }
+
+            if ($('#inputUsername').val().trim() === '') {
+                $("#usernameHelp").text("Your username can't be empty field.");
+
+            } else {
+                $("#usernameHelp").text("Your username goes here.");
+            }
+
+            if ($('#inputEmail').val().trim() === '') {
+                $("#emailHelp").text("We'll never share your email with anyone\n" +
+                    "                            else.");
+
+            } else {
+                $("#emailHelp").text("Your email can't be empty field.");
+            }
+
+            if ($('#inputPassword').val().trim() === '') {
+                $("#passwordHelp").text("Your password can't be empty field.");
+
+            } else {
+                $("#passwordHelp").hide();
+            }
+            if ($('#inputPosition').val().trim() === '') {
+                $("#PositionHelp").text("Position can't be empty field.");
+
+            }else {
+                $("#PositionHelp").hide();
+            }
+
+            if ($('#inputPhoneNumber').val().trim() === '') {
+                $("#PhoneNumberHelp").text("Phone Number can't be empty field.");
+
+            }else {
+                $("#PhoneNumberHelp").hide();
+            }
+            if ($('#inputFB').val().trim() === '') {
+                $("#FbHelp").text("Fb can't be empty field.");
+
+            }else {
+                $("#FbHelp").hide();
+            }
+            if ($('#inputLinkedin').val().trim() === '') {
+                $("#LinkedinHelp").text("Linkedin can't be empty field.");
+
+            }else {
+                $("#LinkedinHelp").hide();
+            }
+            if ($('#role').val().trim() === 'Select users role') {
+                $("#roleHelp").text("user must have role");
+
+            } else {
+                $("#roleHelp").text("");
+            }
+
+            return false;
+        }else{
+            return true;
+        }
+
+
+    }
+    function populateDelBody(_name_, _username_){
+        $('#delName').text(_name_);
+        $('#delUsername').text(_username_);
+        $('#delName').val(_name_);
+        $('#delUsername').val(_username_);
+        $('#delModal').modal('show');
+    }
+    $(document).ready(function () {
+        $('#errorLabel').hide();
+
+        $("#save").click(function (e) {
+            e.preventDefault();
+            if (validateForm() === false) {
+                //handle error message
+                alert("You need to fill all fields");
+
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/api/saveUser",
+                    data: {
+                        name: $("#inputName").val(),
+                        familyName: $("#inputFamilyName").val(),
+                        username: $("#inputUsername").val(),
+                        email: $("#inputEmail").val(),
+                        password: $("#inputPassword").val(),
+                        position: $("#inputPosition").val(),
+                        phoneNumber: $("#inputPhoneNumber").val(),
+                        fb: $("#inputFB").val(),
+                        linkedin: $("#inputLinkedin").val(),
+                        role: $("#role").val()
+                    },
+                    success: function (response) {
+                        setTimeout(function () {
+                            console.info("success", response);
+                            $('#addModal').modal('hide');
+                            $('#errorLabel').hide();
+                            $("#inputName").value("");
+                            $("#inputFamilyName").value("");
+                            $("#inputUsername").value("");
+                            $("#inputEmail").value("");
+                            $("#inputPassword").value("");
+                            $("#inputPosition").value("");
+                            $("#inputPhoneNumber").value("");
+                            $("#inputFB").value("");
+                            $("#inputLinkedin").value("");
+                            $("#role").value("");
+                        }, 300);
+
+                        window.location.replace('/userManagement');
+                    },
+                    error: function (response) {
+                        setTimeout(function () {
+                            console.info("error", response);
+                            $('#errorLabel').show();
+                        }, 300);
+                    }
+                })
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#errorLabel').hide();
+        $("#save").click(function (e) {
+            e.preventDefault();
+            if (validateForm() === true && $('#save').text() === 'Edit') {
+                $.ajax({
+                    type: "put",
+                    url: "/api/editUser",
+                    data: {
+                        id: $("#custId").val(),
+                        name: $("#inputName").val(),
+                        familyName: $("#inputFamilyName").val(),
+                        username: $("#inputUsername").val(),
+                        email: $("#inputEmail").val(),
+                        password: $("#inputPassword").val(),
+                        position: $('#inputPosition').val(),
+                        phoneNumber: $('#inputPhoneNumber').val(),
+                        fb: $("#inputFB").val(),
+                        linkedin: $("#inputLinkedin").val(),
+                        role: $("#role :selected").val()
+                    },
+                    success: function (response) {
+                        setTimeout(function () {
+                            console.info("success", response);
+                            $('#addModal').modal('hide');
+                            $('#errorLabel').hide();
+                            $("#custId").val("");
+                            $("#inputName").val("");
+                            $("#inputFamilyName").val("");
+                            $("#inputUsername").val("");
+                            $("#inputEmail").val("");
+                            $("#inputPassword").val("");
+                            $('#inputPosition').val("");
+                            $('#inputPhoneNumber').val("");
+                            $('#inputFB').val("");
+                            $('#inputLinkedin').val("");
+                            $("#role").value = "";
+                        }, 1000);
+
+                        window.location.replace('/userManagement');
+                    },
+                    error: function (response) {
+                        setTimeout(function () {
+                            console.info("error", response);
+                            $('#errorLabel').show();
+                        }, 1000);
+                    }
+                })
+
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#errDel').hide();
+        $("#deluser").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "post",
+                url: "/api/deleteUser",
+                data: {
+                    name: $("#delName").val(),
+                    username: $("#delUsername").val()
+                },
+                success: function (response) {
+                    setTimeout(function () {
+                        console.info("success", response);
+                        $('#delModal').modal('hide');
+                    }, 300);
+                    window.location.replace('/userManagement');
+                },
+                error: function (response) {
+                    setTimeout(function () {
+                        console.info("error", response);
+                        $('#errDel').show();
+                    }, 300);
+                }
+            })
+        });
+    });
+</script>
+
+</body>
+</html>

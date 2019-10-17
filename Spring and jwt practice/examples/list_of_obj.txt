@@ -1,0 +1,38 @@
+//import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Main {
+  private String first_name;
+  private String last_name;
+
+   public Main(String f_name, String l_name) {
+     this.first_name = f_name;
+     this.last_name = l_name;
+   }
+
+  public String getName() {
+        return first_name;
+    }
+  public String toString() {
+    return first_name + " " + last_name;
+  }
+  public static void main(String[] args) {
+     
+   Main user1 = new Main("Sasa", "Stanojkovic");
+   Main user2 = new Main("Ema", "Stojkovic");
+   ArrayList<Main> users = new ArrayList<Main>();
+   users.add(user1);
+   users.add(user2);
+  
+   //System.out.println(users);
+   for (Main i: users) {
+     System.out.println(i.getName());
+   }
+   for (Main i: users) {
+     System.out.println(i.toString());
+   }
+   //System.out.println(Arrays.toString(users));
+   //System.out.println(Arrays.toString(users.toArray()));
+  }
+}

@@ -1,0 +1,6 @@
+
+Isquid:S1481-"-Remove this unused "category" local variable.( ‡çÊúÿÿÿÿ
+Xsquid:S1854-"<Remove this useless assignment to local variable "category".( ‡çÊúÿÿÿÿ
+|squid:S1488&"`Immediately return this expression instead of assigning it to the temporary variable "category".( ‡çÊúÿÿÿÿ
+>squid:S1905"'Remove this unnecessary cast to "List".(‘À·
+\squid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(Â¢ÅÉùÿÿÿÿ
